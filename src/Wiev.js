@@ -137,7 +137,7 @@ export default class Wiev extends EventEmitter {
 
     /**
      *
-     * @returns {Promise<Object>}
+     * @returns {Promise<Wiev.TemplateData>}
      */
     async getTemplateDataForRender() {
         return {

@@ -90,7 +90,7 @@ export default class Wiev {
 
     getTemplate(): Promise<Wiev.TemplateFunction>;
     getTemplateAsHtmlForRender(): Promise<string>;
-    getTemplateDataForRender(): Promise<object>;
+    getTemplateDataForRender(): Promise<Wiev.TemplateData>;
 
     remove():Promise<this>;
     render():Promise<this>;
