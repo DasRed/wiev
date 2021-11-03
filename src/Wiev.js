@@ -4,7 +4,7 @@ import EventEmitter from '../../eventemitter0/src/eventEmitter.js';
  *
  * @param {Element} element
  * @param {string} name
- * @param {Object<string, {selector: string, listener: (element: Element, event: Event) => void}[]>} events
+ * @param {Object<string, {selector: string, listener: Wiev.DomListener}[]>} events
  */
 function installListener(element, name, events) {
     /**
@@ -32,7 +32,7 @@ function installListener(element, name, events) {
  *
  * @param {Element} element
  * @param {string} name
- * @param {Object<string, {selector: string, listener: (element: Element, event: Event) => void}[]>} events
+ * @param {Object<string, {selector: string, listener: Wiev.DomListener}[]>} events
  */
 function removeListener(element, name, events) {
     element.removeEventListener(name, events[name].listener);
@@ -61,19 +61,23 @@ export default class Wiev extends EventEmitter {
     /**
      *
      * @param {Element} elementTarget
-     * @param {function([data: Object]): Promise<string>} template
+     * @param {Wiev.TemplateFunction} template
      * @param {Object} templateData
-     * @param {"beforebegin" | "afterbegin" | "beforeend" | "afterend"} templateInsertType
-     * @param {Object<string,(element: Element, event: Event)=> void>} events
+     * @param {Wiev.InsertType} templateInsertType
+     * @param {Wiev.DomListeners} events
+     * @param {Wiev.EventListeners} on
+     * @param {Wiev.EventListeners} once
      */
     constructor({
                     elementTarget,
                     template,
                     templateData = {},
                     templateInsertType = Wiev.TEMPLATE_INSERT_TYPE.BEFORE_END,
-                    events = {}
+                    events = {},
+                    on = {},
+                    once = {},
                 }) {
-        super();
+        super({on, once});
 
         this.elementTarget      = elementTarget;
         this.template           = template;
@@ -87,8 +91,8 @@ export default class Wiev extends EventEmitter {
             const [name, selector] = nameAndSelector.split(' ', 2);
             this.addElementEventListener(name, selector, listener);
         });
-        
-        /** 
+
+        /**
          * @event Wiev#created
          * @type {Wiev}
          */
@@ -99,7 +103,7 @@ export default class Wiev extends EventEmitter {
      *
      * @param {string} name
      * @param {string} selector
-     * @param {(element: Element, event: Event) => void} listener
+     * @param {Wiev.DomListener} listener
      * @returns {this}
      */
     addElementEventListener(name, selector, listener) {
@@ -116,7 +120,7 @@ export default class Wiev extends EventEmitter {
 
     /**
      *
-     * @returns {Promise<function(data: Object): Promise<string>>}
+     * @returns {Promise<Wiev.TemplateFunction>}
      */
     async getTemplate() {
         return this.template;
@@ -137,7 +141,7 @@ export default class Wiev extends EventEmitter {
      */
     async getTemplateDataForRender() {
         return {
-            view: this,
+            wiev: this,
             Wiev: Wiev,
             ...this.templateData
         };
@@ -148,8 +152,8 @@ export default class Wiev extends EventEmitter {
      * @returns {Promise<this>}
      */
     async remove() {
-        /** 
-         * @event Wiev#remove:before 
+        /**
+         * @event Wiev#remove:before
          * @type {Wiev}
          */
         this.emit('remove:before', this);
@@ -159,8 +163,8 @@ export default class Wiev extends EventEmitter {
         this.element?.remove();
         this.element = undefined;
 
-        /** 
-         * @event Wiev#remove:after 
+        /**
+         * @event Wiev#remove:after
          * @type {Wiev}
          */
         this.emit('remove:after', this);
@@ -172,7 +176,7 @@ export default class Wiev extends EventEmitter {
      *
      * @param {string} name
      * @param {string} selector
-     * @param {(element: Element, event: Event) => void} listener
+     * @param {Wiev.DomListener} listener
      * @returns {this}
      */
     removeElementEventListener(name, selector, listener) {
@@ -200,8 +204,8 @@ export default class Wiev extends EventEmitter {
      * @returns {Promise<this>}
      */
     async render() {
-        /** 
-         * @event Wiev#render:before 
+        /**
+         * @event Wiev#render:before
          * @type {Wiev}
          */
         this.emit('render:before', this);
@@ -213,8 +217,8 @@ export default class Wiev extends EventEmitter {
 
         Object.keys(this.events).forEach((name) => installListener(this.element, name, this.events));
 
-        /** 
-         * @event Wiev#render:after 
+        /**
+         * @event Wiev#render:after
          * @type {Wiev}
          */
         this.emit('render:after', this);
