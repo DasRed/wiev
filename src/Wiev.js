@@ -1,4 +1,4 @@
-import EventEmitter from '../node_modules/eventemitter0/src/eventEmitter.js';
+import EventEmitter from '../../eventemitter0/src/eventEmitter.js';
 
 /**
  *
@@ -41,13 +41,13 @@ function removeListener(element, name, events) {
 
 /**
  * @property {Element|undefined} element
- * @fires View#created
- * @fires View#remove:before
- * @fires View#remove:after
- * @fires View#render:before
- * @fires View#render:after
+ * @fires Wiev#created
+ * @fires Wiev#remove:before
+ * @fires Wiev#remove:after
+ * @fires Wiev#render:before
+ * @fires Wiev#render:after
  */
-export default class View extends EventEmitter {
+export default class Wiev extends EventEmitter {
     /**
      * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement
      */
@@ -70,7 +70,7 @@ export default class View extends EventEmitter {
                     elementTarget,
                     template,
                     templateData = {},
-                    templateInsertType = View.TEMPLATE_INSERT_TYPE.BEFORE_END,
+                    templateInsertType = Wiev.TEMPLATE_INSERT_TYPE.BEFORE_END,
                     events = {}
                 }) {
         super();
@@ -89,8 +89,8 @@ export default class View extends EventEmitter {
         });
         
         /** 
-         * @event View#created
-         * @type {View}
+         * @event Wiev#created
+         * @type {Wiev}
          */
         this.emit('created', this);
     }
@@ -138,7 +138,7 @@ export default class View extends EventEmitter {
     async getTemplateDataForRender() {
         return {
             view: this,
-            View: View,
+            Wiev: Wiev,
             ...this.templateData
         };
     }
@@ -149,8 +149,8 @@ export default class View extends EventEmitter {
      */
     async remove() {
         /** 
-         * @event View#remove:before 
-         * @type {View}
+         * @event Wiev#remove:before 
+         * @type {Wiev}
          */
         this.emit('remove:before', this);
 
@@ -160,8 +160,8 @@ export default class View extends EventEmitter {
         this.element = undefined;
 
         /** 
-         * @event View#remove:after 
-         * @type {View}
+         * @event Wiev#remove:after 
+         * @type {Wiev}
          */
         this.emit('remove:after', this);
 
@@ -201,8 +201,8 @@ export default class View extends EventEmitter {
      */
     async render() {
         /** 
-         * @event View#render:before 
-         * @type {View}
+         * @event Wiev#render:before 
+         * @type {Wiev}
          */
         this.emit('render:before', this);
 
@@ -214,8 +214,8 @@ export default class View extends EventEmitter {
         Object.keys(this.events).forEach((name) => installListener(this.element, name, this.events));
 
         /** 
-         * @event View#render:after 
-         * @type {View}
+         * @event Wiev#render:after 
+         * @type {Wiev}
          */
         this.emit('render:after', this);
 
