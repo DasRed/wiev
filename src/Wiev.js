@@ -18,7 +18,7 @@ function installListener(element, name, events) {
                 target = target.parentNode;
             }
 
-            if (target !== element && target.matches instanceof Function) {
+            if (target !== element && target?.matches instanceof Function) {
                 entry.listener(target, event);
             }
         });
