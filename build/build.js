@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
 esbuild.build({
-    entryPoints:   ['./src/index.js', './src/Wiev.js'],
+    entryPoints:   ['./src/index.js', './src/Wiev.js', './src/minifyTemplate.js', './src/template.js'],
     bundle:        true,
     minify:        true,
     sourcemap:     false,

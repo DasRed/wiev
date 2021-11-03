@@ -1,6 +1,6 @@
 {
     "name": "wiev",
-    "version": "1.0.7",
+    "version": "1.1.0",
     "description": "Provides a view interface for the browser",
     "main": "src/index.js",
     "type": "module",
@@ -15,7 +15,11 @@
     "devDependencies": {
         "esbuild": "^0.13.12",
         "esbuild-plugin-clear": "^1.0.1",
-        "esbuild-plugin-time": "^1.0.0"
+        "esbuild-plugin-time": "^1.0.0",
+        "js-translator": "^5.0.1"
+    },
+    "peerDependencies": {
+        "js-translator": "^5.0.1"
     },
     "repository": {
         "type": "git",
