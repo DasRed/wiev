@@ -1,0 +1,36 @@
+{
+    "name": "wiev",
+    "version": "1.0.0",
+    "description": "Provides a view interface for the browser",
+    "main": "src/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "node build/build.js",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "/dist/*",
+        "/src/*"
+    ],
+    "devDependencies": {
+        "esbuild": "^0.13.12",
+        "esbuild-plugin-clear": "^1.0.1",
+        "esbuild-plugin-time": "^1.0.0",
+        "eventemitter0": "^2.1.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/DasRed/wiev.git"
+    },
+    "author": "Marco Starker",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/DasRed/wiev/issues"
+    },
+    "homepage": "https://github.com/DasRed/wiev#readme",
+    "keywords": [
+        "wiev",
+        "view",
+        "browser"
+    ]
+}
