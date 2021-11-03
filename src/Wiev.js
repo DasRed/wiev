@@ -152,6 +152,10 @@ export default class Wiev extends EventEmitter {
      * @returns {Promise<this>}
      */
     async remove() {
+        if (this.element == null) {
+            return this;
+        }
+
         /**
          * @event Wiev#remove:before
          * @type {Wiev}
@@ -204,6 +208,10 @@ export default class Wiev extends EventEmitter {
      * @returns {Promise<this>}
      */
     async render() {
+        if (this.element != null) {
+            return this;
+        }
+
         /**
          * @event Wiev#render:before
          * @type {Wiev}
