@@ -1,6 +1,6 @@
 {
     "name": "wiev",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Provides a view interface for the browser",
     "main": "src/index.js",
     "type": "module",
@@ -37,6 +37,6 @@
         "browser"
     ],
     "dependencies": {
-        "eventemitter0": "^2.1.0"
+        "eventemitter0": "^3.0.0"
     }
 }

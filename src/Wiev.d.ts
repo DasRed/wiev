@@ -1,3 +1,5 @@
+import EventEmitter, {EventEmitter as EventEmitterNS} from "eventemitter0";
+
 export namespace Wiev {
     type TemplateFunction = (data: TemplateData) => Promise<string>;
     type InsertType = InsertType.BeforeBegin | InsertType.AfterBegin | InsertType.BeforeEnd | InsertType.AfterEnd;
@@ -14,11 +16,6 @@ export namespace Wiev {
         [key: string]: DomListener;
     }
 
-    type EventListener = () => void;
-    interface EventListeners {
-        [key: string]: () => void;
-    }
-
     interface TemplateData {
         [key: string]: any;
         wiev: Wiev;
@@ -31,8 +28,8 @@ export namespace Wiev {
         templateData?: object;
         templateInsertType?: InsertType;
         events?: DomListeners;
-        on?: EventListeners;
-        once?: EventListeners;
+        on?: EventEmitterNS.EventListeners;
+        once?: EventEmitterNS.EventListeners;
     }
 
     interface WievConstructor {
@@ -69,7 +66,7 @@ export namespace Wiev {
     }
 }
 
-export default class Wiev {
+export default class Wiev extends EventEmitter {
     static TEMPLATE_INSERT_TYPE: {
         BEFORE_BEGIN: Wiev.InsertType.BeforeBegin;
         AFTER_BEGIN: Wiev.InsertType.AfterBegin;
@@ -94,27 +91,4 @@ export default class Wiev {
 
     remove():Promise<this>;
     render():Promise<this>;
-
-    on(name: Wiev.FiredEvents.Created.Name, listener: Wiev.FiredEvents.Created.Listener, context?: object): this;
-    on(name: Wiev.FiredEvents.Remove.Before.Name, listener: Wiev.FiredEvents.Remove.Before.Listener, context?: object): this;
-    on(name: Wiev.FiredEvents.Remove.After.Name, listener: Wiev.FiredEvents.Remove.After.Listener, context?: object): this;
-    on(name: Wiev.FiredEvents.Render.Before.Name, listener: Wiev.FiredEvents.Render.Before.Listener, context?: object): this;
-    on(name: Wiev.FiredEvents.Render.After.Name, listener: Wiev.FiredEvents.Render.After.Listener, context?: object): this;
-    on(name: string, listener: Wiev.EventListener, context?: object): this;
-
-    off(name: Wiev.FiredEvents.Created.Name, listener: Wiev.FiredEvents.Created.Listener, context?: object): this;
-    off(name: Wiev.FiredEvents.Remove.Before.Name, listener: Wiev.FiredEvents.Remove.Before.Listener, context?: object): this;
-    off(name: Wiev.FiredEvents.Remove.After.Name, listener: Wiev.FiredEvents.Remove.After.Listener, context?: object): this;
-    off(name: Wiev.FiredEvents.Render.Before.Name, listener: Wiev.FiredEvents.Render.Before.Listener, context?: object): this;
-    off(name: Wiev.FiredEvents.Render.After.Name, listener: Wiev.FiredEvents.Render.After.Listener, context?: object): this;
-    off(name?: string | null, listener?: Wiev.EventListener | null, context?: object | null): this;
-
-    emit(name: string, ...args: any[]): this;
-
-    once(name: Wiev.FiredEvents.Created.Name, listener: Wiev.FiredEvents.Created.Listener, context?: object): this;
-    once(name: Wiev.FiredEvents.Remove.Before.Name, listener: Wiev.FiredEvents.Remove.Before.Listener, context?: object): this;
-    once(name: Wiev.FiredEvents.Remove.After.Name, listener: Wiev.FiredEvents.Remove.After.Listener, context?: object): this;
-    once(name: Wiev.FiredEvents.Render.Before.Name, listener: Wiev.FiredEvents.Render.Before.Listener, context?: object): this;
-    once(name: Wiev.FiredEvents.Render.After.Name, listener: Wiev.FiredEvents.Render.After.Listener, context?: object): this;
-    once(name: string, listener: Wiev.EventListener, context?: object): this;
 }

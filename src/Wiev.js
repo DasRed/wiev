@@ -65,8 +65,8 @@ export default class Wiev extends EventEmitter {
      * @param {Object} templateData
      * @param {Wiev.InsertType} templateInsertType
      * @param {Wiev.DomListeners} events
-     * @param {Wiev.EventListeners} on
-     * @param {Wiev.EventListeners} once
+     * @param {EventEmitter.EventListeners} on
+     * @param {EventEmitter.EventListeners} once
      */
     constructor({
                     elementTarget,
@@ -160,7 +160,7 @@ export default class Wiev extends EventEmitter {
          * @event Wiev#remove:before
          * @type {Wiev}
          */
-        this.emit('remove:before', this);
+        await this.emit('remove:before', this);
 
         Object.keys(this.events).forEach((name) => removeListener(this.element, name, this.events));
 
@@ -171,7 +171,7 @@ export default class Wiev extends EventEmitter {
          * @event Wiev#remove:after
          * @type {Wiev}
          */
-        this.emit('remove:after', this);
+        await this.emit('remove:after', this);
 
         return this;
     }
@@ -216,7 +216,7 @@ export default class Wiev extends EventEmitter {
          * @event Wiev#render:before
          * @type {Wiev}
          */
-        this.emit('render:before', this);
+        await this.emit('render:before', this);
 
         const tmpl     = document.createElement('template');
         tmpl.innerHTML = await this.getTemplateAsHtmlForRender();
@@ -229,7 +229,7 @@ export default class Wiev extends EventEmitter {
          * @event Wiev#render:after
          * @type {Wiev}
          */
-        this.emit('render:after', this);
+        await this.emit('render:after', this);
 
         return this;
     }
