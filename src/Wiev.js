@@ -1,4 +1,4 @@
-import EventEmitter from '../../eventemitter0/src/EventEmitter.js';
+import EventEmitter from '../node_modules/eventemitter0/src/EventEmitter.js';
 
 /**
  *

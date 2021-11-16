@@ -19,13 +19,5 @@ esbuild.build({
     plugins:       [
         clear('./dist'),
         time(),
-        {
-            name:  'NodeModulesResolver',
-            setup: (build) => {
-                build.onResolve({filter: /eventemitter0/}, (args) => {
-                    return {path: __dirname + '/../node_modules' + args.path.substr(5), namespace: 'file'};
-                });
-            },
-        }
     ],
 });
