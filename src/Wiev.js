@@ -12,16 +12,52 @@ function installListener(element, name, events) {
      * @param {Event} event
      */
     const listener = (event) => {
-        events[name].forEach((entry) => {
-            let target = event.target;
-            while (target !== element.parentNode && target?.matches instanceof Function && target.matches(entry.selector) === false) {
-                target = target.parentNode;
-            }
+        let preventDefaultValue           = false;
+        let stopPropagationValue          = false;
+        let stopImmediatePropagationValue = false;
 
-            if (target !== element.parentNode && target?.matches instanceof Function) {
+        const preventDefault           = event.preventDefault;
+        const stopPropagation          = event.stopPropagation;
+        const stopImmediatePropagation = event.stopImmediatePropagation;
+
+        event.preventDefault = function () {
+            preventDefaultValue = true;
+            return preventDefault.bind(event)();
+        };
+
+        event.stopPropagation = function () {
+            stopPropagationValue = true;
+            return stopPropagation.bind(event)();
+        };
+
+        event.stopImmediatePropagation = function () {
+            stopImmediatePropagationValue = true;
+            return stopImmediatePropagation.bind(event)();
+        };
+
+        events[name]
+            // map all founded element to the level
+            .reduce((acc, entry) => {
+                let target = event.target;
+                let level  = 0;
+                while (target !== element.parentNode && target?.matches instanceof Function && target.matches(entry.selector) === false) {
+                    target = target.parentNode;
+                    level++;
+                }
+
+                if (target !== element.parentNode && target?.matches instanceof Function) {
+                    acc.push({level, target, entry});
+                }
+
+                return acc;
+            }, [])
+            // sort by deepest as first
+            .sort(({level: levelA}, {level: levelB}) => levelA - levelB)
+            // run every listener for the found element, but abort, if the abort functions was called
+            .find(({target, entry}) => {
                 entry.listener(target, event);
-            }
-        });
+                return preventDefaultValue === true || stopPropagationValue === true || stopImmediatePropagationValue === true;
+            });
     };
 
     element.addEventListener(name, listener, true);
