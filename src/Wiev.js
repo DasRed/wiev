@@ -14,11 +14,11 @@ function installListener(element, name, events) {
     const listener = (event) => {
         events[name].forEach((entry) => {
             let target = event.target;
-            while (target !== element && target?.matches instanceof Function && target.matches(entry.selector) === false) {
+            while (target !== element.parentNode && target?.matches instanceof Function && target.matches(entry.selector) === false) {
                 target = target.parentNode;
             }
 
-            if (target !== element && target?.matches instanceof Function) {
+            if (target !== element.parentNode && target?.matches instanceof Function) {
                 entry.listener(target, event);
             }
         });

@@ -8,7 +8,10 @@ import minifyTemplate from './minifyTemplate.js';
  * @property {import('js-translator')} translator
  */
 export default function template(strings, ...values) {
-    let content = strings.reduce((content, string, index) => content + string + String(values[index]), '');
+    let content = strings.reduce((content, string, index) => {
+        const value = index < values.length ? String(values[index]) : '';
+        return content + string + value;
+    }, '');
 
     // convert whitespaces between html tags to nothing and remove Tabs and Linebreaks
     content = minifyTemplate(content);
