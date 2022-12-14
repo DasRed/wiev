@@ -207,7 +207,7 @@ export default class Wiev extends EventEmitter {
      * @returns {Element|null}
      */
     querySelector(selector) {
-        return this.elements.find((element) => element.querySelector(selector)) ?? null;
+        return this.elements.find((element) => element.matches(selector) || element.querySelector(selector)) ?? null;
     }
 
     /**
@@ -217,8 +217,11 @@ export default class Wiev extends EventEmitter {
      */
     querySelectorAll(selector) {
         return this.elements.reduce((acc, element) => {
-            acc.push(...Array.from(element.querySelectorAll(selector)));
-            return acc;
+            if (element.matches(selector) === true) {
+                acc.push(element);
+            }
+
+            return acc.concat(Array.from(element.querySelectorAll(selector)));
         }, []);
     }
 
@@ -279,7 +282,7 @@ export default class Wiev extends EventEmitter {
      * @returns {Promise<this>}
      */
     async render() {
-        if (this.elements.length === 0) {
+        if (this.elements.length !== 0) {
             return this;
         }
 
