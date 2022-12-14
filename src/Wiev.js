@@ -256,8 +256,17 @@ export default class Wiev extends EventEmitter {
 
         const tmpl     = document.createElement('template');
         tmpl.innerHTML = await this.getTemplateAsHtmlForRender();
-        this.element   = tmpl.content.firstElementChild;
-        this.elementTarget.insertAdjacentElement(this.templateInsertType, this.element);
+
+        this.elements = Array.from(tmpl.content.children);
+        this.elements.forEach((element, index, array) => {
+            if (index === 0) {
+                this.elementTarget.insertAdjacentElement(this.templateInsertType, element);
+            }
+            else {
+                array[index - 1].insertAdjacentElement(Wiev.TEMPLATE_INSERT_TYPE.AFTER_END, element);
+            }
+        });
+        this.element = this.elements[0];
 
         Object.keys(this.events).forEach((name) => installListener(this.element, name, this.events));
 

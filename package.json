@@ -6,17 +6,24 @@
     "type": "module",
     "scripts": {
         "build": "node build/build.js",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run build",
+        "semantic-release": "semantic-release"
     },
     "files": [
         "/dist/*",
         "/src/*"
     ],
     "devDependencies": {
+        "@semantic-release/commit-analyzer": "^9.0.2",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/github": "^8.0.7",
+        "@semantic-release/npm": "^9.0.1",
         "esbuild": "^0.13.12",
         "esbuild-plugin-clear": "^1.0.1",
         "esbuild-plugin-time": "^1.0.0",
-        "js-translator": "^5.0.1"
+        "js-translator": "^5.0.1",
+        "semantic-release": "^19.0.5",
+        "semantic-release-cli": "^5.4.4"
     },
     "peerDependencies": {
         "js-translator": "^5.0.1"
@@ -38,5 +45,29 @@
     ],
     "dependencies": {
         "eventemitter0": "^3.0.0"
+    },
+    "release": {
+        "branches": [
+            "main"
+        ],
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            [
+                "@semantic-release/npm",
+                {
+                    "npmPublish": false
+                }
+            ],
+            [
+                "@semantic-release/git",
+                {
+                    "assets": [
+                        "package.json",
+                        "package-lock.json"
+                    ]
+                }
+            ],
+            "@semantic-release/github"
+        ]
     }
 }

@@ -75,6 +75,7 @@ export default class Wiev extends EventEmitter {
     };
     
     element: Element;
+    elements: Element[];
     elementTarget: Element;
     template: Wiev.TemplateFunction;
     templateData: object;
