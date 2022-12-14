@@ -1,6 +1,6 @@
 {
     "name": "wiev",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "description": "Provides a view interface for the browser",
     "main": "src/index.js",
     "type": "module",
