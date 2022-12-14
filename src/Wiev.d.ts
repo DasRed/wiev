@@ -73,7 +73,10 @@ export default class Wiev extends EventEmitter {
         BEFORE_END: Wiev.InsertType.BeforeEnd;
         AFTER_END: Wiev.InsertType.AfterEnd;
     };
-    
+
+    /**
+     * @deprecated
+     */
     element: Element;
     elements: Element[];
     elementTarget: Element;
@@ -82,6 +85,9 @@ export default class Wiev extends EventEmitter {
     templateInsertType: Wiev.InsertType;
 
     constructor(options: Wiev.ConstructorOptions);
+
+    querySelector(selector: string): Element;
+    querySelectorAll(selector: string): Element[];
 
     addElementEventListener(name: string, selector: string, listener: Wiev.DomListener): this;
     removeElementEventListener(name: string, selector: string, listener: Wiev.DomListener): this;

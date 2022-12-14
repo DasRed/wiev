@@ -2,6 +2,16 @@ import EventEmitter from '../node_modules/eventemitter0/src/EventEmitter.js';
 
 /**
  *
+ * @param {Element[]} elements
+ * @param {string} name
+ * @param {Object<string, {selector: string, listener: Wiev.DomListener}[]>} events
+ */
+function installListeners(elements, name, events) {
+    elements.forEach((element) => installListener(element, name, events));
+}
+
+/**
+ *
  * @param {Element} element
  * @param {string} name
  * @param {Object<string, {selector: string, listener: Wiev.DomListener}[]>} events
@@ -66,14 +76,13 @@ function installListener(element, name, events) {
 
 /**
  *
- * @param {Element} element
+ * @param {Element[]} elements
  * @param {string} name
  * @param {Object<string, {selector: string, listener: Wiev.DomListener}[]>} events
  */
-function removeListener(element, name, events) {
-    element.removeEventListener(name, events[name].listener);
+function removeListeners(elements, name, events) {
+    elements.forEach((element) => element.removeEventListener(name, events[name].listener));
 }
-
 
 /**
  * @property {Element|undefined} element
@@ -93,6 +102,14 @@ export default class Wiev extends EventEmitter {
         BEFORE_END:   'beforeend',
         AFTER_END:    'afterend',
     };
+
+    /**
+     * @deprecated
+     * @returns {Element}
+     */
+    get element() {
+        return this.elements[0];
+    }
 
     /**
      *
@@ -115,6 +132,7 @@ export default class Wiev extends EventEmitter {
                 }) {
         super({on, once});
 
+        this.elements           = [];
         this.elementTarget      = elementTarget;
         this.template           = template;
         this.templateData       = templateData;
@@ -147,8 +165,8 @@ export default class Wiev extends EventEmitter {
         this.events[name].push({selector, listener});
 
         // a new event... add
-        if (this.element !== undefined && this.events[name].length === 1) {
-            installListener(this.element, name, this.events);
+        if (this.events[name].length === 1) {
+            installListeners(this.elements, name, this.events);
         }
 
         return this;
@@ -185,23 +203,40 @@ export default class Wiev extends EventEmitter {
 
     /**
      *
+     * @param {string} selector
+     * @returns {Element|null}
+     */
+    querySelector(selector) {
+        return this.elements.find((element) => element.querySelector(selector)) ?? null;
+    }
+
+    /**
+     *
+     * @param {string} selector
+     * @returns {Element[]}
+     */
+    querySelectorAll(selector) {
+        return this.elements.reduce((acc, element) => {
+            acc.push(...Array.from(element.querySelectorAll(selector)));
+            return acc;
+        }, []);
+    }
+
+    /**
+     *
      * @returns {Promise<this>}
      */
     async remove() {
-        if (this.element == null) {
-            return this;
-        }
-
         /**
          * @event Wiev#remove:before
          * @type {Wiev}
          */
         await this.emit('remove:before', this);
 
-        Object.keys(this.events).forEach((name) => removeListener(this.element, name, this.events));
+        Object.keys(this.events).forEach((name) => removeListeners(this.elements, name, this.events));
 
-        this.element?.remove();
-        this.element = undefined;
+        this.elements.forEach((element) => element.remove());
+        this.elements = [];
 
         /**
          * @event Wiev#remove:after
@@ -232,7 +267,7 @@ export default class Wiev extends EventEmitter {
 
         // remove the listener completely
         if (this.events[name].length === 0) {
-            removeListener(this.element, name, this.events);
+            removeListeners(this.elements, name, this.events);
             delete this.events[name];
         }
 
@@ -244,7 +279,7 @@ export default class Wiev extends EventEmitter {
      * @returns {Promise<this>}
      */
     async render() {
-        if (this.element != null) {
+        if (this.elements.length === 0) {
             return this;
         }
 
@@ -266,9 +301,8 @@ export default class Wiev extends EventEmitter {
                 array[index - 1].insertAdjacentElement(Wiev.TEMPLATE_INSERT_TYPE.AFTER_END, element);
             }
         });
-        this.element = this.elements[0];
 
-        Object.keys(this.events).forEach((name) => installListener(this.element, name, this.events));
+        Object.keys(this.events).forEach((name) => installListeners(this.elements, name, this.events));
 
         /**
          * @event Wiev#render:after
