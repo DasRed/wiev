@@ -6,7 +6,6 @@
     "type": "module",
     "scripts": {
         "build": "node build/build.js",
-        "prepublishOnly": "npm run build",
         "semantic-release": "semantic-release"
     },
     "files": [
