@@ -203,6 +203,22 @@ export default class Wiev extends EventEmitter {
 
     /**
      *
+     * @param {string} name
+     * @param {string} selector
+     * @param {Wiev.DomListener} listener
+     * @returns {this}
+     */
+    onceElementEventListener(name, selector, listener) {
+        const callback = (...args) => {
+            this.removeElementEventListener(name, selector, callback);
+            return listener(...args);
+        };
+
+        return this.addElementEventListener(name, selector, callback);
+    }
+
+    /**
+     *
      * @param {string} selector
      * @returns {Element|null}
      */

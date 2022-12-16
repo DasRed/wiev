@@ -90,6 +90,7 @@ export default class Wiev extends EventEmitter {
     querySelectorAll(selector: string): Element[];
 
     addElementEventListener(name: string, selector: string, listener: Wiev.DomListener): this;
+    onceElementEventListener(name: string, selector: string, listener: Wiev.DomListener): this;
     removeElementEventListener(name: string, selector: string, listener: Wiev.DomListener): this;
 
     getTemplate(): Promise<Wiev.TemplateFunction>;
