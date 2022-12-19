@@ -85,7 +85,6 @@ function removeListeners(elements, name, events) {
 }
 
 /**
- * @property {Element|undefined} element
  * @fires Wiev#created
  * @fires Wiev#remove:before
  * @fires Wiev#remove:after
@@ -104,7 +103,6 @@ export default class Wiev extends EventEmitter {
     };
 
     /**
-     * @deprecated
      * @returns {Element}
      */
     get element() {

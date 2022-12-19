@@ -74,9 +74,6 @@ export default class Wiev extends EventEmitter {
         AFTER_END: Wiev.InsertType.AfterEnd;
     };
 
-    /**
-     * @deprecated
-     */
     element: Element;
     elements: Element[];
     elementTarget: Element;
